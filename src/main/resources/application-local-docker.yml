@@ -17,6 +17,11 @@ spring:
     user:
       name: in2test
       password: in2pass
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://wallet-keycloak:8084/realms/WalletIdP
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 server:
   port: 8083

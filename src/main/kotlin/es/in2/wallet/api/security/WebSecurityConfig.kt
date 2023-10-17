@@ -1,22 +1,15 @@
 package es.in2.wallet.api.security
 
-import es.in2.wallet.api.security.filter.JWTAuthenticationFilter
-import es.in2.wallet.api.security.filter.JWTAuthorizationFilter
-import es.in2.wallet.api.service.AppUserService
 import es.in2.wallet.api.util.ALL
-import es.in2.wallet.wca.service.WalletKeyService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpMethod
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -25,18 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-class WebSecurityConfig(
-    private val walletDidKeyGenerator: WalletDidKeyGenerator,
-    private val authConfiguration: AuthenticationConfiguration,
-    private val walletKeyService: WalletKeyService,
-    private val appUserService: AppUserService,
-) {
-
-    @Bean
-    fun authenticationManager(): AuthenticationManager = authConfiguration.authenticationManager
-
-    @Bean
-    fun bCryptEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
+class WebSecurityConfig{
 
     @Order(1)
     @Bean
@@ -52,30 +34,17 @@ class WebSecurityConfig(
                 disable()
             }
             authorizeRequests {
-                authorize(HttpMethod.POST, "/api/users", permitAll)
+                authorize(HttpMethod.POST, "/api/register", permitAll)
                 authorize(HttpMethod.GET, "/api/**", authenticated)
                 authorize(HttpMethod.POST, "/api/**", authenticated)
+                authorize(HttpMethod.DELETE, "/api/**", authenticated)
             }
-            addFilterAt<JWTAuthenticationFilter>(
-                JWTAuthenticationFilter(authenticationManager(), walletDidKeyGenerator, walletKeyService, appUserService)
-            )
-            addFilterAt<JWTAuthorizationFilter>(
-                JWTAuthorizationFilter(authenticationManager(), walletDidKeyGenerator, walletKeyService)
-            )
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
-        }
-        return http.build()
-    }
-
-    @Bean
-    fun loginFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http {
-            authorizeRequests {
-                authorize(anyRequest, authenticated)
+            oauth2ResourceServer {
+                jwt {  }
             }
-            formLogin { }
         }
         return http.build()
     }
@@ -94,11 +63,13 @@ class WebSecurityConfig(
             "http://localhost:8081",
             "http://localhost:8082",
             "http://localhost:8083",
+            "http://localhost:8084",
             "http://localhost:4200",
             "http://localhost:4201",
             "http://localhost:4202",
             "http://localhost:4203",
             "http://localhost:8100"
+
         )
         configuration.allowedMethods = listOf(
             HttpMethod.GET.name(),
