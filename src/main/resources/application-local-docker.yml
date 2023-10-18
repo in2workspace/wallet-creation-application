@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://local-mysql:3306/domedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    username: in2admin
-    password: in2pass
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false
@@ -20,11 +20,11 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://wallet-keycloak:8084/realms/WalletIdP
+          issuer-uri: ${APP_URL_KEYCLOAK}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 server:
-  port: 8083
+  port: ${SERVER_PORT}
 
 in2:
   openapi:
@@ -33,5 +33,5 @@ in2:
 
 app:
   url:
-    api: http://localhost:8083
-    orion_context_broker: http://wallet-orion:1026/v2/entities
+    api: ${APP_URL_API}
+    orion_context_broker: ${APP_URL_ORION}
