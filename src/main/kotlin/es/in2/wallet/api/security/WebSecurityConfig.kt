@@ -1,6 +1,7 @@
 package es.in2.wallet.api.security
 
 import es.in2.wallet.api.util.ALL
+import es.in2.wallet.api.util.API_SECURED_PATTERN
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -35,9 +36,9 @@ class WebSecurityConfig{
             }
             authorizeRequests {
                 authorize(HttpMethod.POST, "/api/register", permitAll)
-                authorize(HttpMethod.GET, "/api/**", authenticated)
-                authorize(HttpMethod.POST, "/api/**", authenticated)
-                authorize(HttpMethod.DELETE, "/api/**", authenticated)
+                authorize(HttpMethod.GET, API_SECURED_PATTERN, authenticated)
+                authorize(HttpMethod.POST, API_SECURED_PATTERN, authenticated)
+                authorize(HttpMethod.DELETE, API_SECURED_PATTERN, authenticated)
             }
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
