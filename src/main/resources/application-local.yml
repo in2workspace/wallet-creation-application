@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: WalletAPI
+  datasource:
+    url: jdbc:mysql://localhost:3309/domedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: in2admin
+    password: in2pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    open-in-view: false
+    properties:
+      jakarta.persistence.sharedCache.mode: UNSPECIFIED
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+  security:
+    user:
+      name: in2test
+      password: in2pass
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8084/realms/WalletIdP
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+server:
+  port: 8083
+
+in2:
+  openapi:
+    local-url: http://localhost:8083
+    dev-url: https://walletapidev.in2.es
+
+app:
+  url:
+    api: http://localhost:8083
+    orion_context_broker: http://localhost:1026/v2/entities
+
+# Logging configuration
+logging:
+  level:
+    # Set the log level for the entire application
+    root: INFO
+    # Set log level for specific packages or classes
+    es.in2.wallet.service: DEBUG
+    es.in2.wallet.util: DEBUG

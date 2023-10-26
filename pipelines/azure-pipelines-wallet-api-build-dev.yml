@@ -1,0 +1,62 @@
+trigger: none
+      
+variables:
+  registryName: 'acrdomedev001'
+  imageRepository: 'dome-wallet-api'
+  azureSubscription: 'Entorno Cloud DOME DEV'
+  dockerRegistryServiceConnection: 'ACR DEV'
+  dockerfilePath: '$(System.DefaultWorkingDirectory)/Dockerfile'
+  app-id: '67bad954-f7ce-4640-b435-27df49939334'
+  password-or-cert: 'ub68Q~OhA0S4Xqfi3UltfuAQjJiwS2RChw8F_beB'
+  tenant: 'd4080b69-4c2b-49e6-9c20-3789b47bf163'
+      
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  #- stage: Publicar_Ficheros_Artifact
+  #  pool:
+  #      vmImage: ubuntu-latest
+  #  jobs:
+  #      - job:
+  #        displayName: Publicación de Archivos
+  #        steps:
+  #          - task: PublishPipelineArtifact@1
+  #            inputs:
+  #              targetPath: '$(Pipeline.Workspace)/s'
+  #              artifact: 'dockerfile_backend'
+  #              publishLocation: 'pipeline'
+  - stage: BuildSonarcloud
+    pool:
+      vmImage: ubuntu-latest
+    jobs:
+        - job:
+          displayName: Publicación de Archivos
+          steps:
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'SonarCloud'
+              organization: 'in2dome'
+              scannerMode: 'Other'
+              extraProperties: |
+                # Additional properties that will be passed to the scanner,
+                # Put one key=value per line, example:
+                # sonar.exclusions=**/*.bin
+                sonar.projectKey=in2Dome_in2-dome-wallet_api
+                sonar.projectName=in2-dome-wallet_api
+          - task: Gradle@3
+            inputs:
+               gradleWrapperFile: 'gradlew'
+               tasks: 'build test --stacktrace'
+               publishJUnitResults: true
+               testResultsFiles: '**/TEST-*.xml'
+               javaHomeOption: 'JDKVersion'
+               jdkVersionOption: 1.17
+               sonarQubeRunAnalysis: true
+               spotBugsAnalysis: false
+               gradleOptions: '-Xmx3072m'
+               sqGradlePluginVersionChoice: 'specify'
+               sonarQubeGradlePluginVersion: '3.3'
+          - task: SonarCloudPublish@1
+            inputs:
+                    pollingTimeoutSec: '300'
