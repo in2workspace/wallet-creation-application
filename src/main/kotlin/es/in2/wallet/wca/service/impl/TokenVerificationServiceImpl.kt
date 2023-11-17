@@ -8,11 +8,11 @@ import com.nimbusds.jose.Payload
 import com.nimbusds.jose.crypto.ECDSAVerifier
 import com.nimbusds.jose.jwk.ECKey
 import com.nimbusds.jwt.SignedJWT
-import es.in2.wallet.api.security.exception.InvalidTokenException
+import es.in2.wallet.wca.exception.InvalidTokenException
 import es.in2.wallet.wca.exception.JwtInvalidFormatException
 import es.in2.wallet.wca.service.TokenVerificationService
-import es.in2.wallet.api.util.ISSUER_SUB
-import es.in2.wallet.api.util.ISSUER_TOKEN_PROPERTY_NAME
+import es.in2.wallet.wca.util.ISSUER_SUB
+import es.in2.wallet.wca.util.ISSUER_TOKEN_PROPERTY_NAME
 import id.walt.services.did.DidService
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger

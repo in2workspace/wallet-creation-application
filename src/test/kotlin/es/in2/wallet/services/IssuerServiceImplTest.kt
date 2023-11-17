@@ -1,8 +1,8 @@
 package es.in2.wallet.services
 
-import es.in2.wallet.api.model.entity.Issuer
-import es.in2.wallet.api.model.repository.IssuerRepository
-import es.in2.wallet.api.service.impl.IssuerServiceImpl
+import es.in2.wallet.wca.model.entity.Issuer
+import es.in2.wallet.wca.model.repository.IssuerRepository
+import es.in2.wallet.wca.service.impl.IssuerServiceImpl
 import org.junit.jupiter.api.Assertions.*
 
 import org.junit.jupiter.api.BeforeEach

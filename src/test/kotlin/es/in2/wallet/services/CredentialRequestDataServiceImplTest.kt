@@ -2,9 +2,7 @@ package es.in2.wallet.services
 
 import es.in2.wallet.wca.model.entity.CredentialRequestData
 import es.in2.wallet.wca.exception.CredentialRequestDataNotFoundException
-import es.in2.wallet.api.model.entity.AppUser
 import es.in2.wallet.wca.model.repository.CredentialRequestDataRepository
-import es.in2.wallet.api.service.AppUserService
 import es.in2.wallet.wca.service.impl.CredentialRequestDataServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -22,31 +20,26 @@ class CredentialRequestDataServiceImplTest {
     @Mock
     private lateinit var credentialRequestDataRepository: CredentialRequestDataRepository
 
-    @Mock
-    private lateinit var appUserService: AppUserService
-
     private lateinit var appCredentialRequestDataServiceImpl: CredentialRequestDataServiceImpl
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         appCredentialRequestDataServiceImpl = CredentialRequestDataServiceImpl(
-                credentialRequestDataRepository,
-                appUserService
+                credentialRequestDataRepository
         )
     }
     @Test
     fun testSaveCredentialRequestData_CredentialRequestDataNotFoundException() {
         val issuerName = "issuer"
+        val userId = UUID.randomUUID()
         val issuerNonce = "nonce"
         val issuerAccessToken = "token"
-        val user = AppUser(UUID.randomUUID(), "username", "email@example.com", "password")
 
-        `when`(appUserService.getUserWithContextAuthentication()).thenReturn(user)
-        `when`(credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, user.id.toString()))
+        `when`(credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, userId.toString()))
             .thenReturn(Optional.empty())
 
-        appCredentialRequestDataServiceImpl.saveCredentialRequestData(issuerName, issuerNonce, issuerAccessToken)
+        appCredentialRequestDataServiceImpl.saveCredentialRequestData(issuerName, issuerNonce, issuerAccessToken, userId.toString())
 
         verify(credentialRequestDataRepository, times(1)).save(any(CredentialRequestData::class.java))
     }
@@ -56,14 +49,13 @@ class CredentialRequestDataServiceImplTest {
         val issuerName = "issuer"
         val issuerNonce = "nonce"
         val issuerAccessToken = "token"
-        val user = AppUser(UUID.randomUUID(), "username", "email@example.com", "password")
-        val requestData = CredentialRequestData(UUID.randomUUID(), issuerName, user.id.toString(), issuerNonce, issuerAccessToken)
+        val userId = UUID.randomUUID()
+        val requestData = CredentialRequestData(UUID.randomUUID(), issuerName, userId.toString(), issuerNonce, issuerAccessToken)
 
-        `when`(appUserService.getUserWithContextAuthentication()).thenReturn(user)
-        `when`(credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, user.id.toString()))
+         `when`(credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, userId.toString()))
             .thenReturn(Optional.of(requestData))
 
-        appCredentialRequestDataServiceImpl.saveCredentialRequestData(issuerName, issuerNonce, issuerAccessToken)
+        appCredentialRequestDataServiceImpl.saveCredentialRequestData(issuerName, issuerNonce, issuerAccessToken, userId.toString())
 
         verify(credentialRequestDataRepository, times(1)).save(any(CredentialRequestData::class.java))
     }
@@ -81,14 +73,11 @@ class CredentialRequestDataServiceImplTest {
             issuerAccessToken = "token123"
         )
 
-        // Mock behavior of appUserService.getUserWithContextAuthentication() to return a user ID
-        `when`(appUserService.getUserWithContextAuthentication()).thenReturn(AppUser(id = userId, username = "user123", email = "user@example.com", password = "password123"))
-
         // Mock behavior of appCredentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId() to return the expected data
         `when`(credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, userId.toString())).thenReturn(Optional.of(expectedCredentialRequestData))
 
         // Call the method to be tested
-        val result = appCredentialRequestDataServiceImpl.getCredentialRequestDataByIssuerName(issuerName)
+        val result = appCredentialRequestDataServiceImpl.getCredentialRequestDataByIssuerName(issuerName, userId.toString())
 
         // Verify that the result is the expected data
         assertEquals(expectedCredentialRequestData, result.get())
@@ -101,14 +90,13 @@ class CredentialRequestDataServiceImplTest {
 
         // Mock behavior of appUserService.getUserWithContextAuthentication() to return a user ID
         val userId = UUID.randomUUID()
-        `when`(appUserService.getUserWithContextAuthentication()).thenReturn(AppUser(id = userId, username = "user123", email = "user@example.com", password = "password123"))
 
         // Mock behavior of appCredentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId() to return an empty Optional
         `when`(credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, userId.toString())).thenReturn(Optional.empty())
 
         // Call the method to be tested and expect the exception
         assertThrows<CredentialRequestDataNotFoundException> {
-            appCredentialRequestDataServiceImpl.getCredentialRequestDataByIssuerName(issuerName)
+            appCredentialRequestDataServiceImpl.getCredentialRequestDataByIssuerName(issuerName, userId.toString())
         }
     }
 

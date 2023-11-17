@@ -1,10 +1,13 @@
 spring:
+  application:
+    name: gencat-iep-wallet-wca-ms
   datasource:
-    url: jdbc:mysql://local-mysql:3306/domedb?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:h2:mem:dbtest
+    driver-class-name: org.h2.Driver
     username: in2admin
     password: in2pass
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
     properties:
       jakarta.persistence.sharedCache.mode: UNSPECIFIED
@@ -12,24 +15,16 @@ spring:
       ddl-auto: update
     show-sql: true
     generate-ddl: true
-    database-platform: org.hibernate.dialect.MySQLDialect
-  security:
-    user:
-      name: in2test
-      password: in2pass
+
 
 server:
-  port: 8083
-
-in2:
-  openapi:
-    local-url: http://localhost:8083
-    dev-url: https://walletapidev.in2.es
+  port: 8088
 
 app:
   url:
-    api: https://walletapidev.in2.es
-    orion_context_broker: http://wallet-orion:1026/v2/entities
+    api: https://yourwcaurl
+    wallet-data-baseurl: https://yourdataurl
+    wallet-crypto-baseurl: https://yourcryptourl
 
 # Logging configuration
 logging:
@@ -37,5 +32,53 @@ logging:
     # Set the log level for the entire application
     root: INFO
     # Set log level for specific packages or classes
-    es.in2.wallet.service: DEBUG
-    es.in2.wallet.util: DEBUG
+    es.in2.wallet.wca.service: DEBUG
+    es.in2.wallet.wca.util: DEBUG
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health, info, loggers, metrics
+      base-path: /
+      path-mapping:
+        health: health
+        info: info
+        loggers: loggers
+        metrics: metrics
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    info:
+      enabled: true
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /spring-ui
+    tags-sorter: alpha
+    operations-sorter: method
+
+openapi:
+  server:
+    url: https://yourwcaurl
+    description: Spring MS Wallet WCA
+  info:
+    title: IN2 Gencat IEP Wallet WCA MS Project
+    version: 0.0.1
+    termsOfService: $apiUrl/terms-of-service
+    license:
+      name: MIT License
+      url: https://choosealicense.com/licenses/mit/
+    contact:
+      email: contacto@in2.es
+      name: IN2
+      url: https://in2.es
+    description: This API exposes endpoints of the Wallet Creation Application

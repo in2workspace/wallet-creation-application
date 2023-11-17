@@ -1,5 +1,6 @@
 package es.in2.wallet.wca.controller
 
+import es.in2.wallet.wca.exception.NoAuthorizationFoundException
 import es.in2.wallet.wca.model.dto.VcSelectorResponseDTO
 import es.in2.wallet.wca.service.SiopService
 import es.in2.wallet.wca.service.VerifiablePresentationService
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/vp")
 class VerifiablePresentationController(
     private val verifiablePresentationService: VerifiablePresentationService,
-    private val siopService: SiopService
+    private val siopService: SiopService,
 ) {
 
     private val log: Logger = LogManager.getLogger(VerifiablePresentationController::class.java)
@@ -34,10 +36,16 @@ class VerifiablePresentationController(
     )
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    fun createVerifiablePresentation(@RequestBody vcSelectorResponseDTO: VcSelectorResponseDTO): String {
+    fun createVerifiablePresentation(@RequestHeader(HttpHeaders.AUTHORIZATION) authorizationHeader: String, @RequestBody vcSelectorResponseDTO: VcSelectorResponseDTO): String {
+        if (authorizationHeader.isEmpty() || !authorizationHeader.startsWith("Bearer ")) {
+            val errorMessage = "No Bearer token found in Authorization header"
+            throw NoAuthorizationFoundException(errorMessage)
+        }
+        val token = authorizationHeader.substring(7)
         // create a verifiable presentation
         log.info("Creating Verifiable Presentation...")
-        val verifiablePresentation = verifiablePresentationService.createVerifiablePresentation(vcSelectorResponseDTO)
+        val verifiablePresentation = verifiablePresentationService.createVerifiablePresentation(vcSelectorResponseDTO, token)
+        println(verifiablePresentation)
         // send the verifiable presentation to the dome backend
         log.info("Sending Authentication Response using RedirectUri...")
         return siopService.sendAuthenticationResponse(vcSelectorResponseDTO, verifiablePresentation)
