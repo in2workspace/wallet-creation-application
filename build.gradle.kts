@@ -32,7 +32,6 @@ repositories {
 dependencies {
 
 	// Spring Boot
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -56,6 +55,7 @@ dependencies {
 	testAnnotationProcessor(lombokDependency)
 
 	// OpenAPI
+	implementation("org.springdoc:springdoc-openapi-starter-common:2.0.4")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
 
 	// walt.id

@@ -1,7 +1,7 @@
 package es.in2.wallet.wca.service.impl
 
+
 import es.in2.wallet.wca.exception.CredentialRequestDataNotFoundException
-import es.in2.wallet.api.service.AppUserService
 import es.in2.wallet.wca.model.repository.CredentialRequestDataRepository
 import es.in2.wallet.wca.model.entity.CredentialRequestData
 import es.in2.wallet.wca.service.CredentialRequestDataService
@@ -13,14 +13,13 @@ import java.util.*
 
 @Service
 class CredentialRequestDataServiceImpl(
-    private val credentialRequestDataRepository: CredentialRequestDataRepository,
-    private val appUserService: AppUserService
+    private val credentialRequestDataRepository: CredentialRequestDataRepository
 ) : CredentialRequestDataService {
 
     private val log: Logger = LoggerFactory.getLogger(CredentialRequestDataServiceImpl::class.java)
-    override fun saveCredentialRequestData(issuerName: String, issuerNonce: String, issuerAccessToken: String) {
+    override fun saveCredentialRequestData(issuerName: String, issuerNonce: String, issuerAccessToken: String, userId: String) {
         try {
-            val requestData = getCredentialRequestDataByIssuerName(issuerName)
+            val requestData = getCredentialRequestDataByIssuerName(issuerName, userId)
             // Update the existent data
             val appCredentialRequestDataUpdated = requestData.get().copy(
                 issuerNonce = issuerNonce,
@@ -30,7 +29,6 @@ class CredentialRequestDataServiceImpl(
             log.debug("Updated the nonce value and the access token value.")
 
         }catch (e: CredentialRequestDataNotFoundException){
-            val userId = appUserService.getUserWithContextAuthentication().id.toString()
             // Create new data
             val credentialRequestData = CredentialRequestData(
                 id = UUID.randomUUID(),
@@ -44,21 +42,17 @@ class CredentialRequestDataServiceImpl(
         }
     }
 
-    override fun getCredentialRequestDataByIssuerName(issuerName: String):  Optional<CredentialRequestData>{
-        val userId = appUserService.getUserWithContextAuthentication().id.toString()
+    override fun getCredentialRequestDataByIssuerName(issuerName: String, userId: String):  Optional<CredentialRequestData>{
         val requestData = credentialRequestDataRepository.findAppCredentialRequestDataByIssuerNameAndUserId(issuerName, userId)
         if (requestData.isPresent) {
             return requestData
         }
-
         else{throw CredentialRequestDataNotFoundException("The $issuerName was not found")
         }
     }
     @Transactional
-    override fun saveNewIssuerNonceByIssuerName(issuerName: String, freshNonce: String) {
-        val userId = appUserService.getUserWithContextAuthentication().id.toString()
+    override fun saveNewIssuerNonceByIssuerName(issuerName: String, freshNonce: String, userId: String) {
         credentialRequestDataRepository.updateIssuerNonceWithNewValueByIssuerNameAndUserId(issuerName,userId,freshNonce)
     }
-
 
 }

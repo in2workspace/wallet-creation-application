@@ -1,8 +1,9 @@
 package es.in2.wallet.wca.exception.handler
 
-import es.in2.wallet.api.security.exception.InvalidTokenException
+import es.in2.wallet.wca.exception.InvalidTokenException
 import es.in2.wallet.wca.exception.DidVerificationException
 import es.in2.wallet.wca.exception.JwtInvalidFormatException
+import es.in2.wallet.wca.exception.NoAuthorizationFoundException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -33,6 +34,13 @@ class WcaExceptionHandler {
     @ExceptionHandler(InvalidTokenException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleRequestTokenVerificationException(e: Exception): ResponseEntity<Unit> {
+        log.error(e.message)
+        return ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(NoAuthorizationFoundException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handleNoAuthorizationFoundException(e: Exception): ResponseEntity<Unit> {
         log.error(e.message)
         return ResponseEntity(HttpStatus.BAD_REQUEST)
     }

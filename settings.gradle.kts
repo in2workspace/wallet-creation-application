@@ -1,1 +1,1 @@
-rootProject.name = "in2-wallet"
+rootProject.name = "in2-wallet-wca"
