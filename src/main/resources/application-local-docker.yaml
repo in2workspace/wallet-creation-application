@@ -1,0 +1,75 @@
+# Spring Configuration
+spring:
+  application:
+    name: Wallet Api
+  main:
+    web-application-type: reactive
+
+app:
+  url:
+    wallet-data: ${WALLET_DATA_URL}
+    wallet-crypto: ${WALLET_CRYPTO_URL}
+
+
+# Server Configuration
+server:
+  port: ${SERVER_PORT}
+
+# Logging Configuration
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    org.springframework.security: INFO
+    es.in2.dome.blockchain.connector: DEBUG
+
+# Actuator Configuration
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health, info, loggers, metrics, prometheus
+      base-path: /
+      path-mapping:
+        health: health
+        info: info
+        loggers: loggers
+        metrics: metrics
+        prometheus: prometheus
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+# Documentation Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    tags-sorter: alpha
+    operations-sorter: method
+
+openapi:
+  server:
+    url: ${APP_URL_API}
+    description: Test example server
+  info:
+    title: Example API
+    version: 1.0.0-SNAPSHOT
+    description: null
+    termsOfService: https://example.com/terms-of-service
+    license:
+      name: Apache 2.0
+      url: https://www.apache.org/licenses/LICENSE-2.0.html
+    contact:
+      email: info@example.com
+      name: Example
+      url: https://example.com

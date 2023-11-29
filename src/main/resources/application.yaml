@@ -1,0 +1,74 @@
+# Spring Configuration
+spring:
+  application:
+    name: wallet-creation-application
+  main:
+    web-application-type: reactive
+
+app:
+  url:
+    wallet-data: http://localhost:8086
+    wallet-crypto: http://localhost:8081
+
+# Server Configuration
+server:
+  port: 8087
+
+# Logging Configuration
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    org.springframework.security: INFO
+    es.in2.dome.blockchain.connector: DEBUG
+
+# Actuator Configuration
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health, info, loggers, metrics, prometheus
+      base-path: /
+      path-mapping:
+        health: health
+        info: info
+        loggers: loggers
+        metrics: metrics
+        prometheus: prometheus
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+# Documentation Configuration
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    tags-sorter: alpha
+    operations-sorter: method
+
+openapi:
+  server:
+    url: http://localhost:8087
+    description: Wallet Api server
+  info:
+    title: Wallet API
+    version: 1.0.0-SNAPSHOT
+    description: wallet api
+    termsOfService: https://example.com/terms-of-service
+    license:
+      name: Apache 2.0
+      url: https://www.apache.org/licenses/LICENSE-2.0.html
+    contact:
+      email: info@example.com
+      name: Example
+      url: https://example.com
