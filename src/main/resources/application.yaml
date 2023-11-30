@@ -12,15 +12,14 @@ app:
 
 # Server Configuration
 server:
-  port: 8087
+  port: 8080
 
 # Logging Configuration
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
-    org.springframework.security: INFO
-    es.in2.dome.blockchain.connector: DEBUG
+    es.in2.walletcreationapplication: DEBUG
 
 # Actuator Configuration
 management:
