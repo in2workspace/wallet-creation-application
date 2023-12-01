@@ -55,7 +55,7 @@ public class WalletDataServiceImpl implements WalletDataService {
         String walletDataVCUrl = urlWalletData + "/api/credentials";
         // Add headers
         List<Map.Entry<String, String>> headers = new ArrayList<>();
-        headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, authorizationToken));
+        headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
         headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
         // Add body
         CredentialSaveRequest credentialSaveRequest = CredentialSaveRequest.builder()
@@ -72,6 +72,7 @@ public class WalletDataServiceImpl implements WalletDataService {
 
     @Override
     public Mono<List<CredentialsBasicInfo>> getSelectableVCsByAuthorizationRequestScope(String processId, String authorizationToken, AuthorizationRequest authorizationRequest) {
+
         return getCredentialsByScope(processId, authorizationRequest, authorizationToken)
                 .doOnSuccess(selectableVCs -> log.info("ProcessID: {} - SelectableVCs: {}", processId, selectableVCs))
                 .flatMap(this::parseSelectableVCsResponse)
@@ -85,7 +86,7 @@ public class WalletDataServiceImpl implements WalletDataService {
             String url = urlWalletData + GET_SELECTABLE_VCS;
             // Headers
             List<Map.Entry<String, String>> headers = new ArrayList<>();
-            headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationToken));
+            headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
             headers.add(new AbstractMap.SimpleEntry<>(CONTENT_TYPE, CONTENT_TYPE_APPLICATION_JSON));
             // Body
             String body = objectMapper.writeValueAsString(SelectableVCsRequest.builder().vcTypes(authorizationRequest.scope()).build());
@@ -112,7 +113,7 @@ public class WalletDataServiceImpl implements WalletDataService {
                 .flatMap(verifiableCredential -> {
                     // Headers
                     List<Map.Entry<String, String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, authorizationToken));
+                    headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
                     // Wallet Data URL
                     String url = urlWalletData + "/api/credentials/id?credentialId=" + verifiableCredential.id() + "&format=vc_jwt";
                     return getRequest(url, headers)

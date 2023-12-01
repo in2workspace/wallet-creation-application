@@ -71,7 +71,7 @@ public class CredentialServiceImpl implements CredentialService {
     private Mono<String> postCredential(TokenResponse tokenResponse, CredentialIssuerMetadata credentialIssuerMetadata,
                                         CredentialRequest credentialRequest) {
         List<Map.Entry<String, String>> headers = List.of(Map.entry(CONTENT_TYPE, CONTENT_TYPE_APPLICATION_JSON),
-                Map.entry(HEADER_AUTHORIZATION, "Bearer " + tokenResponse.accessToken()));
+                Map.entry(HEADER_AUTHORIZATION, BEARER + tokenResponse.accessToken()));
         try {
             return postRequest(credentialIssuerMetadata.credentialEndpoint(), headers, objectMapper.writeValueAsString(credentialRequest))
                     .onErrorResume(e -> {

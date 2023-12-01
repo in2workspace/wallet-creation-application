@@ -62,7 +62,7 @@ public class PresentationServiceImpl implements PresentationService {
                     throw new EmptyCredentialListException("Verifiable credentials list is empty");
                 }
             } catch (Exception e) {
-                throw new IllegalStateException("EError obtaining the subject DID from the verifiable credential" + e);
+                throw new IllegalStateException("Error obtaining the subject DID from the verifiable credential" + e);
             }
         });
     }

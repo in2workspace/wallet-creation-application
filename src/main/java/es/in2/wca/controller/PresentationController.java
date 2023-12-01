@@ -24,7 +24,7 @@ public class PresentationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Object> createVerifiablePresentation(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
+    public Mono<Void> createVerifiablePresentation(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,
                                                      @RequestBody VcSelectorResponse vcSelectorResponse) {
         String processId = UUID.randomUUID().toString();
         MDC.put("processId", processId);

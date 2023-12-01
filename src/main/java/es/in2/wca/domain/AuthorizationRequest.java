@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +18,6 @@ public record AuthorizationRequest(
         @JsonProperty("state") String state,
         @JsonProperty("nonce") String nonce,
         @JsonProperty("redirect_uri") String redirectUri
-
 //      @JsonProperty("issuer_state") String issuerState,
 //      @JsonProperty("authorization_details") String authorizationDetails,
 //      @JsonProperty("code_challenge") String codeChallenge,
@@ -26,19 +27,20 @@ public record AuthorizationRequest(
 ) {
 
     public static AuthorizationRequest fromString(String input) {
-        // Delete "openid://?" prefix
-        String cleanedInput = input.replace("openid://?", "");
-        Map<String, List<String>> queryParams = UriComponentsBuilder.fromUriString(cleanedInput).build().getQueryParams();
-        List<String> scope = queryParams.getOrDefault("scope", List.of(""));
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(input);
+        Map<String, List<String>> queryParams = builder.build().getQueryParams();
+        String scope = queryParams.getOrDefault("scope", List.of("")).get(0);
         String responseType = queryParams.getOrDefault("response_type", List.of("")).get(0);
         String responseMode = queryParams.getOrDefault("response_mode", List.of("")).get(0);
         String clientId = queryParams.getOrDefault("client_id", List.of("")).get(0);
         String redirectUri = queryParams.getOrDefault("redirect_uri", List.of("")).get(0);
         String state = queryParams.getOrDefault("state", List.of("")).get(0);
         String nonce = queryParams.getOrDefault("nonce", List.of("")).get(0);
-
+        // scope = [data1, data2, dataN]
+        String scopeChained = scope.replace("[", "").replace("]", "").trim();
+        List<String> scopeList = Arrays.asList(scopeChained.split(","));
         return AuthorizationRequest.builder()
-                .scope(scope)
+                .scope(scopeList)
                 .responseType(responseType)
                 .responseMode(responseMode)
                 .clientId(clientId)
@@ -46,38 +48,6 @@ public record AuthorizationRequest(
                 .state(state)
                 .nonce(nonce)
                 .build();
-
-//        return OpenIdConfig.builder()
-//                .scope(scope)
-//                .responseType(responseType)
-//                .responseMode(responseMode)
-//                .clientId(clientId)
-//                .redirectUri(redirectUri)
-//                .state(state)
-//                .nonce(nonce).build();
-//
-//
-//
-//        // Divide parameters for "&" as delimiter
-//        String[] params = cleanedInput.split("&");
-//        // Create a map with the parameters
-//        Map<String, String> paramMap = new HashMap<>(Map.of());
-//        Arrays.stream(params).parallel().forEach(param -> {
-//            String[] keyValue = param.split("=");
-//            if (keyValue.length == 2) {
-//                paramMap.put(keyValue[0], keyValue[1]);
-//            }
-//        });
-//        List<String> scopeList = Arrays.asList(paramMap.getOrDefault("scope", "").split(","));
-//        return new AuthorizationRequest(
-//                scopeList,
-//                paramMap.get("response_type"),
-//                paramMap.get("response_mode"),
-//                paramMap.get("client_id"),
-//                paramMap.get("state"),
-//                paramMap.get("nonce"),
-//                paramMap.get("redirect_uri")
-//        );
     }
 
 }

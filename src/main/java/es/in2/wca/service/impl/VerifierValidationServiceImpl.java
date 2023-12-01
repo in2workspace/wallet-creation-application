@@ -31,7 +31,7 @@ public class VerifierValidationServiceImpl implements VerifierValidationService 
     private final ObjectMapper objectMapper;
 
     @Override
-    public Mono<Void> verifyIssuerOfTheAuthorizationRequest(String processId, String jwtAuthorizationRequest) {
+    public Mono<String> verifyIssuerOfTheAuthorizationRequest(String processId, String jwtAuthorizationRequest) {
         // Parse the Authorization Request in JWT format
         return parseAuthorizationRequestInJwtFormat(processId, jwtAuthorizationRequest)
                 // Extract and verify client_id claim from the Authorization Request
@@ -45,7 +45,8 @@ public class VerifierValidationServiceImpl implements VerifierValidationService 
                         .onErrorResume(e -> {
                             log.error("Error during the verification of Siop Auth Request on JWS format", e);
                             return Mono.error(new ParseErrorException("Error during the verification of Siop Auth Request on JWS format" + e));
-                        }));
+                        }))
+                .then(Mono.just(jwtAuthorizationRequest));
     }
 
     private Mono<SignedJWT> parseAuthorizationRequestInJwtFormat(String processId, String requestToken) {

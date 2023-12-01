@@ -28,13 +28,15 @@ public class AttestationExchangeServiceFacadeImpl implements AttestationExchange
     public Mono<VcSelectorRequest> getSelectableCredentialsRequiredToBuildThePresentation(String processId, String authorizationToken, String qrContent) {
         log.info("ProcessID: {} - Processing a Verifiable Credential Login Request", processId);
         // Get Authorization Request executing the VC Login Request
-        return authorizationRequestService.getAuthorizationRequestFromVcLoginRequest(processId, qrContent, authorizationToken)
+        return authorizationRequestService.getAuthorizationRequestFromVcLoginRequest(processId, qrContent)
                 // Validate the Verifier which issues the Authorization Request
                 .flatMap(jwtAuthorizationRequest ->
                         verifierValidationService.verifyIssuerOfTheAuthorizationRequest(processId, jwtAuthorizationRequest)
-                                // Get the Authorization Request from the JWT Authorization Request Claim
-                                .then(authorizationRequestService.getAuthorizationRequestFromJwtAuthorizationRequestClaim(processId, jwtAuthorizationRequest))
-                )// Check which Verifiable Credentials are selectable
+                )
+                // Get the Authorization Request from the JWT Authorization Request Claim
+                .flatMap(jwtAuthorizationRequest ->
+                        authorizationRequestService.getAuthorizationRequestFromJwtAuthorizationRequestClaim(processId, jwtAuthorizationRequest))
+                // Check which Verifiable Credentials are selectable
                 .flatMap(authorizationRequest ->
                         walletDataService.getSelectableVCsByAuthorizationRequestScope(processId, authorizationToken, authorizationRequest)
                                 // Build the SelectableVCsRequest
