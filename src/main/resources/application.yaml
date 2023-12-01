@@ -5,10 +5,11 @@ spring:
   main:
     web-application-type: reactive
 
-app:
-  url:
-    wallet-data: http://localhost:8086
-    wallet-crypto: http://localhost:8081
+
+wallet-data:
+  url: http://localhost:8086
+##wallet-crypto:
+#  url: http://localhost:8081
 
 # Server Configuration
 server:
@@ -19,7 +20,7 @@ logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
-    es.in2.walletcreationapplication: DEBUG
+    es.in2.wca: DEBUG
 
 # Actuator Configuration
 management:

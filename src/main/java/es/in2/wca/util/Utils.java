@@ -25,7 +25,7 @@ public class Utils {
     public static final String ISSUER_SUB = "sub";
     public static final String JWT_VC = "jwt_vc";
     public static final String JWT_VP = "jwt_vp";
-    public static final String GET_SELECTABLE_VCS = "/api/credentials/types";
+    public static final String GET_SELECTABLE_VCS = "/api/v1/credentials/types";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String PRE_AUTH_CODE_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:pre-authorized_code";
     public static final String SERVICE_MATRIX = "service-matrix.properties";

@@ -1,120 +1,51 @@
-# Spring Boot Microservice Skeleton
+# WALLET-CREATION-APPLICATION
 
-This is a skeleton for a Spring Boot microservice. It is intended to be used as a starting point for new microservices.
+## Introduction
+The Wallet-Creation Application is a pivotal component in the issuance and exchange of verifiable credentials with issuers. It plays a key role in credential-based authentication processes for service access on various portals. The application also features QRContent functionality, which determines the appropriate flow based on the contents of a QR code.
 
-## Pre-requisites
-- Java 17
-- Spring Boot 3.x
-- Gradle 8.x
-- Docker
+## Main Features
+* **Credential Issuance:** Manages the issuance of verifiable credentials in collaboration with credential issuers
+* **Credential Exchange:** Facilitates the exchange of credentials, enabling users to access services on various portals through credential-based login.
+* **QRContent Functionality:** Interprets the content of QR codes to determine and initiate the correct credential-related flow.
 
-## Features
-- Reactive Web (WebFlux)
-- OpenAPI 3.x documentation & Swagger UI
-- Health check endpoint
-- Logback logging
-- Dockerized (multi-stage build)
-- Checkstyle
-- OWASP Dependency Check
+## Installation
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/)
+- [Git](https://git-scm.com/)
 
-## Dependencies
+### Dependencies for Installation
+To successfully install and operate the Wallet-Creation-Application, you will need the following dependencies:
+* **Wallet-Data:** Essential for storing issued credentials linked to users. This component is used to manage and store credential data, ensuring that users can select and present their credentials effectively during the credential presentation process. For its installation, follow the guide provided here: [Wallet-Data Configuration Component.](https://github.com/in2workspace/wallet-data).
+  
+Ensure these dependencies are properly set up and configured before proceeding with the Wallet-Creation Application setup.
 
-## Getting Started
-
-### Initial Project Configuration Changes
-1. Clone this repository
-2. Rename the project to your project name
-3. Rename `rootProject.name` in `settings.gradle.kts` to your project name
-
-### Docker Configuration Changes
-1. Update `Dokerfile` to use the correct jar file name `ENTRYPOINT ["java", "-jar", "/app/demo-0.0.1SNAPSHOT.jar"]`.
-2. Update `Dockerfile` Gradle tag to the latest version [here](https://hub.docker.com/_/gradle).
-3. Update `Dockerfile` Java tag to the latest version [here](https://hub.docker.com/_/openjdk).
-
-## Profiles
-
-* **default**: This is the default profile that contains settings applicable to all environments. It serves as a baseline configuration for your application.
-
-* **dev**: The dev profile is typically used for development environments. It may contain configurations specific to development, such as a local database setup, debugging options, and other settings that make development easier.
-
-* **test**: The test profile is usually used for automated testing environments, like unit tests and integration tests. It can have configurations for in-memory databases or test-specific configurations that differ from the production setup.
-
-* **prod**: The prod profile is meant for production environments. It contains configurations optimized for performance, security, and reliability. This is where your application runs in a real-world scenario.
-
-## JaCoCo
-
-Adding exclusions through `build.gradle`:
-
+## Configuration
+Now that you have the necessary dependencies, you can configure the wallet-creation-application using the following docker-compose. Ensure to adjust the environment variables to match your Wallet-Data configurations.
+* Wallet-Crypto Configuration
+```yaml
+wallet-creation-application:
+  container_name: wallet-creation-application
+  image: in2kizuna/wallet-creation-application:v1.0.0
+  environment:
+    SERVER_PORT: "8087"
+    OPENAPI_SERVER_URL: "http://wallet-creation-application:8087"
+    WALLET-DATA_URL: "http://wallet-data:8086"
+  command:
+    - run
+  ports:
+    - "8087:8087"
+  networks:
+    local_network:
 ```
-tasks.jacocoTestReport {
-	dependsOn(tasks.test)
-	...
-	afterEvaluate {
-		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: [
-				'**/SkeletonApplication.class',
-			])
-		}))
-	}
-}
-```
+## Project Status
+The project is currently at version **1.0.0** and is in a stable state.
 
-## Documentation
+## Contact
+For any inquiries or collaboration, you can contact us at:
+* **Email:** [info@in2.es](mailto:info@in2.es)
+* **Name:** IN2, Ingeniería de la Información
+* **Website:** [https://in2.es](https://in2.es)
 
-### Api Docs 
-`http://localhost:8081/api-docs`
-### Swagger-ui 
-`http://localhost:8081/swagger-ui`
-
-## Metrics
-
-### Health Check
-`http://localhost:8081/health`
-
-## Metrics
-`http://localhost:8081/metrics`
-
-## Logging
-`http://localhost:8081/loggers`
-
-## Best Practices
-
-### Design
-#### Basic-Required
-- [ ] Backend for Frontend (BFF) as an API Gateway
-- [ ] Database schema per service
-- [x] Expose the /health endpoint
-#### Medium
-- [ ] Injection of external configuration at runtime
-- [ ] Service Contracts Testing Agreement
-#### Advanced
-- [ ] Liquibase for database change management
-- [ ] Dapr for event-driven programming
-- [ ] Implement Distributed Tracing
-- [ ] If High Performance is Required, Spring Native
-- [ ] Early and Frequent DevSecOps
-
-### Programming
-#### Basic-Required
-- [ ] Development tools
-- [ ] Project structure
-- [ ] Logging rules
-- [ ] Startup Profiles Configuration
-- [ ] Code documentation with Open API
-- [ ] Use of UI Swagger
-- [ ] Input validation in controllers
-- [ ] Use of Lombok
-- [ ] Use of Checkstyle
-#### Medium
-- [ ] Project dependency standards
-- [ ] Simple and clean controller layer
-- [ ] Service layer focused on business logic
-- [ ] Constructor injection instead of @Autowired
-- [ ] Pagination and sorting with Spring Data JPA
-- [ ] Unit testing with JUnit and Mockito
-#### Advanced
-- [ ] JSON log configuration with Logback
-- [ ] Global exception handling
-- [ ] Avoid unnecessary additional dependencies
-- [ ] Review Dependency Updates
-- [ ] Use of Maven Wrapper
+## Creation Date and Update Dates
+* **Creation Date:** October 26, 2023
+* **Last Updated:** December 4, 2023
