@@ -3,6 +3,7 @@ package es.in2.wca.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.in2.wca.configuration.properties.WalletDataProperties;
 import es.in2.wca.domain.AuthorizationRequest;
 import es.in2.wca.domain.CredentialResponse;
 import es.in2.wca.domain.VcSelectorResponse;
@@ -17,7 +18,6 @@ import id.walt.credentials.w3c.PresentableCredential;
 import id.walt.credentials.w3c.VerifiableCredential;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -38,9 +38,7 @@ public class WalletDataServiceImpl implements WalletDataService {
 
     private final ObjectMapper objectMapper;
 
-    // todo: move to properties
-    @Value("${app.url.wallet-data}")
-    private String urlWalletData;
+    private final WalletDataProperties walletDataProperties;
 
     @Override
     public Mono<CredentialResponse> saveCredential(String processId, String authorizationToken, CredentialResponse credentialResponse) {
@@ -52,7 +50,7 @@ public class WalletDataServiceImpl implements WalletDataService {
 
     private Mono<String> save(String authorizationToken, CredentialResponse credentialResponse) {
         // Create dynamic URL
-        String walletDataVCUrl = urlWalletData + "/api/credentials";
+        String walletDataVCUrl = walletDataProperties.url() + "/api/v1/credentials";
         // Add headers
         List<Map.Entry<String, String>> headers = new ArrayList<>();
         headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
@@ -83,7 +81,7 @@ public class WalletDataServiceImpl implements WalletDataService {
     private Mono<String> getCredentialsByScope(String processId, AuthorizationRequest authorizationRequest, String authorizationToken) {
         try {
             // URL
-            String url = urlWalletData + GET_SELECTABLE_VCS;
+            String url = walletDataProperties.url() + GET_SELECTABLE_VCS;
             // Headers
             List<Map.Entry<String, String>> headers = new ArrayList<>();
             headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
@@ -115,7 +113,7 @@ public class WalletDataServiceImpl implements WalletDataService {
                     List<Map.Entry<String, String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
                     // Wallet Data URL
-                    String url = urlWalletData + "/api/credentials/id?credentialId=" + verifiableCredential.id() + "&format=vc_jwt";
+                    String url = walletDataProperties.url() + "/api/v1/credentials/id?credentialId=" + verifiableCredential.id() + "&format=vc_jwt";
                     return getRequest(url, headers)
                             .map(response -> new PresentableCredential(VerifiableCredential.Companion.fromString(response), null, false));
                 }).collectList();
