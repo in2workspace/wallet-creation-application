@@ -30,6 +30,8 @@ public class Utils {
     public static final String PRE_AUTH_CODE_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:pre-authorized_code";
     public static final String SERVICE_MATRIX = "service-matrix.properties";
 
+    public static final String GLOBAL_ENDPOINTS_API = "/api/v1/*";
+    public static final String ALLOWED_METHODS = "*";
     public static boolean isNullOrBlank(String string) {
         return string == null || string.isBlank();
     }
