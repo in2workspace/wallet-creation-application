@@ -8,6 +8,8 @@ spring:
 
 wallet-data:
   url: http://localhost:8086
+wallet-wda:
+  url: http://localhost:4200
 ##wallet-crypto:
 #  url: http://localhost:8081
 

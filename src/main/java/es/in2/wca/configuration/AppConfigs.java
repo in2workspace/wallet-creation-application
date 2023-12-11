@@ -2,6 +2,7 @@ package es.in2.wca.configuration;
 
 import es.in2.wca.configuration.properties.OpenApiProperties;
 import es.in2.wca.configuration.properties.WalletDataProperties;
+import es.in2.wca.configuration.properties.WalletDrivingApplicationProperties;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ public class AppConfigs {
 
     private final OpenApiProperties openApiProperties;
     private final WalletDataProperties walletDataProperties;
+    private final WalletDrivingApplicationProperties walletDrivingApplicationProperties;
 
     @PostConstruct
     void init() {
@@ -22,6 +24,7 @@ public class AppConfigs {
         log.info(prefixMessage, openApiProperties.server());
         log.info(prefixMessage, openApiProperties.info());
         log.info(prefixMessage, walletDataProperties);
+        log.info(prefixMessage, walletDrivingApplicationProperties);
     }
 
 }

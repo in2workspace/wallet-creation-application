@@ -38,7 +38,7 @@ wallet-creation-application:
     local_network:
 ```
 ## Project Status
-The project is currently at version **1.0.0** and is in a stable state.
+The project is currently at version **1.0.1** and is in a stable state.
 
 ## Contact
 For any inquiries or collaboration, you can contact us at:
@@ -48,4 +48,4 @@ For any inquiries or collaboration, you can contact us at:
 
 ## Creation Date and Update Dates
 * **Creation Date:** October 26, 2023
-* **Last Updated:** December 4, 2023
+* **Last Updated:** December 5, 2023
