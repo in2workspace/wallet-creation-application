@@ -10,7 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enabled centralized cross-origin resource sharing (CORS) to allow frontend applications to call the endpoints.
 - Set the frontend URL dynamically through an external environment variable, enhancing configuration flexibility.
 
-## [[v1.0.0](https://github.com/in2workspace/wallet-creation-application/releases/tag/1.0.0)] - 2023-12-4
+## [v1.1.0] - unreleased
+
+### Added
+- Add support for GitHub Actions for CI/CD.
+
+## [v1.0.0] - 2023-12-4
 
 ### Added
 - Manages the issuance of verifiable credentials in collaboration with credential issuers.
@@ -24,3 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Environment variable configuration for integrating with the Wallet-Data component.
 - Docker-compose configuration for easy deployment and setup
 - Project status, contact information, and creation/update dates in README.
+
+[release]:
+[1.0.0]: https://github.com/in2workspace/wallet-creation-application/releases/tag/1.0.0

@@ -5,14 +5,6 @@ spring:
   main:
     web-application-type: reactive
 
-
-wallet-data:
-  url: http://localhost:8086
-wallet-wda:
-  url: http://localhost:4200
-##wallet-crypto:
-#  url: http://localhost:8081
-
 # Server Configuration
 server:
   port: 8080
@@ -24,7 +16,7 @@ logging:
   level:
     es.in2.wca: DEBUG
 
-# Actuator Configuration
+## Actuator Configuration
 management:
   endpoints:
     enabled-by-default: false
@@ -58,19 +50,28 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: method
 
+wallet-data:
+  url:
+
+wallet-wda:
+  url:
+
+##wallet-crypto:
+#  url: http://localhost:8081
+
 openapi:
   server:
-    url: http://localhost:8087
-    description: Wallet Api server
+    url:
+    description:
   info:
-    title: Wallet API
-    version: 1.0.0-SNAPSHOT
-    description: wallet api
-    termsOfService: https://example.com/terms-of-service
+    title:
+    version:
+    description:
+    termsOfService:
     license:
-      name: Apache 2.0
-      url: https://www.apache.org/licenses/LICENSE-2.0.html
+      name:
+      url:
     contact:
-      email: info@example.com
-      name: Example
-      url: https://example.com
+      email:
+      name:
+      url:
