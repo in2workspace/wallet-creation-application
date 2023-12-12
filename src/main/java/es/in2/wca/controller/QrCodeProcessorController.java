@@ -19,7 +19,7 @@ import static es.in2.wca.util.Utils.getCleanBearerToken;
 @Tag(name = "QR Codes", description = "QR code management API")
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/execute-content")
+@RequestMapping("/api/v2/execute-content")
 @RequiredArgsConstructor
 public class QrCodeProcessorController {
 
