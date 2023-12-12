@@ -50,7 +50,7 @@ public class WalletDataServiceImpl implements WalletDataService {
 
     private Mono<String> save(String authorizationToken, CredentialResponse credentialResponse) {
         // Create dynamic URL
-        String walletDataVCUrl = walletDataProperties.url() + "/api/v1/credentials";
+        String walletDataVCUrl = walletDataProperties.url() + "/api/v2/credentials";
         // Add headers
         List<Map.Entry<String, String>> headers = new ArrayList<>();
         headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
@@ -113,7 +113,7 @@ public class WalletDataServiceImpl implements WalletDataService {
                     List<Map.Entry<String, String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
                     // Wallet Data URL
-                    String url = walletDataProperties.url() + "/api/v1/credentials/id?credentialId=" + verifiableCredential.id() + "&format=vc_jwt";
+                    String url = walletDataProperties.url() + "/api/v2/credentials/id?credentialId=" + verifiableCredential.id() + "&format=vc_jwt";
                     return getRequest(url, headers)
                             .map(response -> new PresentableCredential(VerifiableCredential.Companion.fromString(response), null, false));
                 }).collectList();

@@ -25,11 +25,12 @@ Now that you have the necessary dependencies, you can configure the wallet-creat
 ```yaml
 wallet-creation-application:
   container_name: wallet-creation-application
-  image: in2kizuna/wallet-creation-application:v1.0.0
+  image: in2kizuna/wallet-creation-application:v2.0.0
   environment:
     SERVER_PORT: "8087"
     OPENAPI_SERVER_URL: "http://wallet-creation-application:8087"
     WALLET-DATA_URL: "http://wallet-data:8086"
+    WALLET-WDA_URL: "<your-frontend-url>"
   command:
     - run
   ports:
@@ -38,7 +39,7 @@ wallet-creation-application:
     local_network:
 ```
 ## Project Status
-The project is currently at version **1.0.1** and is in a stable state.
+The project is currently at version **2.0.0** and is in a stable state.
 
 ## Contact
 For any inquiries or collaboration, you can contact us at:
@@ -48,4 +49,4 @@ For any inquiries or collaboration, you can contact us at:
 
 ## Creation Date and Update Dates
 * **Creation Date:** October 26, 2023
-* **Last Updated:** December 5, 2023
+* **Last Updated:** December 12, 2023

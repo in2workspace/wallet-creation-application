@@ -16,7 +16,7 @@ import static es.in2.wca.util.Utils.getCleanBearerToken;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/verifiable-presentation")
+@RequestMapping("/api/v2/verifiable-presentation")
 @RequiredArgsConstructor
 public class PresentationController {
 
