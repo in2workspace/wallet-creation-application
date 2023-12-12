@@ -62,13 +62,13 @@ public class QrCodeProcessorServiceImpl implements QrCodeProcessorService {
 
     private Mono<QrType> identifyQrContentType(String qrContent) {
         return Mono.fromSupplier(() -> {
-            if (qrContent.matches("(https|http).*?(authentication-request|authentication-requests).*")) {
+            if (qrContent.matches("(https|http)\\S*(authentication-request|authentication-requests)\\S*")) {
                 return VC_LOGIN_REQUEST;
-            } else if (qrContent.matches("(https|http).*?(credential-offer).*")) {
+            } else if (qrContent.matches("(https|http)\\S*(credential-offer)\\S*")) {
                 return QrType.CREDENTIAL_OFFER_URI;
-            } else if (qrContent.matches("openid-credential-offer://.*")) {
+            } else if (qrContent.matches("openid-credential-offer://\\S*")) {
                 return OPENID_CREDENTIAL_OFFER;
-            } else if (qrContent.matches("openid://.*")) {
+            } else if (qrContent.matches("openid://\\S*")) {
                 return OPENID_AUTHENTICATION_REQUEST;
             } else {
                 log.warn("Unknown QR content type: {}", qrContent);
@@ -76,5 +76,6 @@ public class QrCodeProcessorServiceImpl implements QrCodeProcessorService {
             }
         });
     }
+
 
 }
