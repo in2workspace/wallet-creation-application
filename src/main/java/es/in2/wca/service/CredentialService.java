@@ -6,5 +6,5 @@ import es.in2.wca.domain.TokenResponse;
 import reactor.core.publisher.Mono;
 
 public interface CredentialService {
-    Mono<CredentialResponse> getCredential(String processId, TokenResponse tokenResponse, CredentialIssuerMetadata credentialIssuerMetadata);
+    Mono<CredentialResponse> getCredential(String processId, TokenResponse tokenResponse, CredentialIssuerMetadata credentialIssuerMetadata, String authorizationToken);
 }

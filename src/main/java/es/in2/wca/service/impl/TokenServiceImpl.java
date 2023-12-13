@@ -56,7 +56,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private Mono<TokenResponse> parseTokenResponse(String response) {
-        try {
+            try {
             return Mono.just(objectMapper.readValue(response, TokenResponse.class));
         } catch (Exception e) {
             return Mono.error(new FailedDeserializingException("Error while deserializing Credential Issuer Metadata: " + e));

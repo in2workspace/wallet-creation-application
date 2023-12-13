@@ -10,27 +10,21 @@ import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import es.in2.wca.domain.CredentialRequest;
-import es.in2.wca.domain.CredentialResponse;
-import es.in2.wca.domain.CredentialIssuerMetadata;
-import es.in2.wca.domain.TokenResponse;
+import es.in2.wca.configuration.properties.WalletCryptoProperties;
+import es.in2.wca.domain.*;
 import es.in2.wca.exception.FailedCommunicationException;
 import es.in2.wca.exception.FailedDeserializingException;
 import es.in2.wca.exception.FailedSerializingException;
 import es.in2.wca.service.CredentialService;
-import id.walt.crypto.KeyAlgorithm;
-import id.walt.crypto.KeyId;
-import id.walt.model.DidMethod;
-import id.walt.services.did.DidService;
-import id.walt.services.key.KeyFormat;
-import id.walt.services.key.KeyService;
-import id.walt.services.keystore.KeyType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,11 +36,13 @@ import static es.in2.wca.util.Utils.*;
 public class CredentialServiceImpl implements CredentialService {
 
     private final ObjectMapper objectMapper;
+    private  final WalletCryptoProperties walletCryptoProperties;
 
     @Override
-    public Mono<CredentialResponse> getCredential(String processId, TokenResponse tokenResponse, CredentialIssuerMetadata credentialIssuerMetadata) {
+    public Mono<CredentialResponse> getCredential(String processId, TokenResponse tokenResponse, CredentialIssuerMetadata credentialIssuerMetadata, String authorizationToken) {
         // build CredentialRequest
-        return buildCredentialRequest(tokenResponse.cNonce(), credentialIssuerMetadata.credentialIssuer())
+        return generateDid(authorizationToken)
+                .flatMap(did -> buildCredentialRequest(tokenResponse.cNonce(), credentialIssuerMetadata.credentialIssuer(),did))
                 .doOnSuccess(credentialRequest -> log.info("ProcessID: {} - CredentialRequest: {}", processId, credentialRequest))
                 // post CredentialRequest
                 .flatMap(credentialRequest -> postCredential(tokenResponse, credentialIssuerMetadata, credentialRequest))
@@ -84,33 +80,57 @@ public class CredentialServiceImpl implements CredentialService {
         }
     }
 
-    private Mono<CredentialRequest> buildCredentialRequest(String nonce, String issuer) {
-        // create Proof object
-        return Mono.fromCallable(() -> {
-                    // todo migrate to wallet-crypto
-                    KeyId keyId = KeyService.Companion.getService().generate(KeyAlgorithm.ECDSA_Secp256r1);
-                    String did = DidService.INSTANCE.create(DidMethod.key, keyId.getId(), null);
-                    String privateKey = KeyService.Companion.getService().export(keyId.getId(), KeyFormat.JWK, KeyType.PRIVATE);
-                    ECKey ecJWK = JWK.parse(privateKey).toECKey();
-                    JWSSigner signer = new ECDSASigner(ecJWK);
-                    JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
-                            .type(new JOSEObjectType("openid4vci-proof+jwt"))
-                            .keyID(did)
-                            .build();
-                    JWTClaimsSet payload = new JWTClaimsSet.Builder()
-                            .audience(issuer)
-                            .issueTime(java.util.Date.from(Instant.now()))
-                            .claim("nonce", nonce)
-                            .build();
-                    SignedJWT signedJWT = new SignedJWT(header, payload);
-                    signedJWT.sign(signer);
-                    return signedJWT.serialize();
+
+    private Mono<String> generateDid(String authorizationToken) {
+        // Create dynamic URL
+        String walletCryptoUrl = walletCryptoProperties.url() + "/api/v2/dids/key";
+        // Add headers
+        List<Map.Entry<String, String>> headers = new ArrayList<>();
+        headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
+        // Send request
+        return postRequest(walletCryptoUrl,headers,"");
+    }
+    private Mono<CredentialRequest> buildCredentialRequest(String nonce, String issuer, String did) {
+        String url = walletCryptoProperties.url() + "/api/v2/secrets?did=" + did;
+        List<Map.Entry<String, String>> headers = new ArrayList<>();
+
+        return getRequest(url, headers)
+                .flatMap(response -> {
+                    try {
+                        ECKey ecJWK = JWK.parse(response).toECKey();
+                        log.debug("ECKey: {}", ecJWK);
+
+                        JWSSigner signer = new ECDSASigner(ecJWK);
+
+                        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
+                                .type(new JOSEObjectType("openid4vci-proof+jwt"))
+                                .keyID(did)
+                                .build();
+                        Instant issueTime = Instant.now();
+                        JWTClaimsSet payload = new JWTClaimsSet.Builder()
+                                .audience(issuer)
+                                .issueTime(java.util.Date.from(issueTime))
+                                .claim("nonce", nonce)
+                                .build();
+
+                        SignedJWT signedJWT = new SignedJWT(header, payload);
+                        signedJWT.sign(signer);
+                        log.debug("JWT signed successfully");
+                        return Mono.just(signedJWT.serialize());
+                    } catch (Exception e) {
+                        log.error("Error while creating the Signed JWT", e);
+                        return Mono.error(new RuntimeException("Error while deserializing VerifiableCredentialResponse: " + response));
+                    }
                 })
-                // create CredentialRequest object
                 .flatMap(jwt -> Mono.just(CredentialRequest.builder()
-                        .format("jwt_vc_json")
-                        .proof(CredentialRequest.Proof.builder().proofType("jwt").jwt(jwt).build())
-                        .build()));
+                .format("jwt_vc_json")
+                .proof(CredentialRequest.Proof.builder().proofType("jwt").jwt(jwt).build())
+                .build()))
+                .doOnNext(requestBody -> log.debug("Credential Request Body: {}", requestBody))
+                .onErrorResume(e -> {
+                    log.error("Error creating CredentialRequestBodyDTO", e);
+                    return Mono.error(new RuntimeException("Error creating CredentialRequestBodyDTO", e));
+                });
     }
 
 }

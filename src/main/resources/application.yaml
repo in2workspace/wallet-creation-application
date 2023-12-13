@@ -51,13 +51,13 @@ springdoc:
     operations-sorter: method
 
 wallet-data:
-  url:
+  url: http://localhost:8086
 
 wallet-wda:
   url:
 
-##wallet-crypto:
-#  url: http://localhost:8081
+wallet-crypto:
+  url: http://localhost:8087
 
 openapi:
   server:
