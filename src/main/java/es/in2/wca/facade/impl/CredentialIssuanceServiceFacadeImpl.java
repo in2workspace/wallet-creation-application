@@ -27,7 +27,7 @@ public class CredentialIssuanceServiceFacadeImpl implements CredentialIssuanceSe
                         // get Pre-Authorized Token
                         .flatMap(credentialIssuerMetadata -> tokenService.getPreAuthorizedToken(processId, credentialOffer, credentialIssuerMetadata)
                                 // get Credential
-                                .flatMap(tokenResponse -> credentialService.getCredential(processId, tokenResponse, credentialIssuerMetadata)))
+                                .flatMap(tokenResponse -> credentialService.getCredential(processId, tokenResponse, credentialIssuerMetadata,authorizationToken)))
                         // save Credential
                         .flatMap(credentialResponse -> walletDataService.saveCredential(processId, authorizationToken, credentialResponse))
                 );
