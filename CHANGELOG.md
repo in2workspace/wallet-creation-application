@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Checkstyle for code quality.
 - Enabled centralized cross-origin resource sharing (CORS) to allow frontend applications to call the endpoints.
 - Set the frontend URL dynamically through an external environment variable, enhancing configuration flexibility.
+- SonarCloud for code quality.
 
 ## [v1.0.0] - 2023-12-4
 
