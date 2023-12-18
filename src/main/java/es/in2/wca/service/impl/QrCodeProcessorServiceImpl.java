@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static es.in2.wca.domain.QrType.*;
+import static es.in2.wca.util.Utils.*;
 
 @Service
 @Slf4j
@@ -62,13 +63,13 @@ public class QrCodeProcessorServiceImpl implements QrCodeProcessorService {
 
     private Mono<QrType> identifyQrContentType(String qrContent) {
         return Mono.fromSupplier(() -> {
-            if (qrContent.matches("(https|http)\\S*(authentication-request|authentication-requests)\\S*")) {
+            if (LOGIN_REQUEST_PATTERN.matcher(qrContent).matches()) {
                 return VC_LOGIN_REQUEST;
-            } else if (qrContent.matches("(https|http)\\S*(credential-offer)\\S*")) {
+            } else if (CREDENTIAL_OFFER_PATTERN.matcher(qrContent).matches()) {
                 return QrType.CREDENTIAL_OFFER_URI;
-            } else if (qrContent.matches("openid-credential-offer://\\S*")) {
+            } else if (OPENID_CREDENTIAL_OFFER_PATTERN.matcher(qrContent).matches()) {
                 return OPENID_CREDENTIAL_OFFER;
-            } else if (qrContent.matches("openid://\\S*")) {
+            } else if (OPENID_AUTHENTICATION_REQUEST_PATTERN.matcher(qrContent).matches()) {
                 return OPENID_AUTHENTICATION_REQUEST;
             } else {
                 log.warn("Unknown QR content type: {}", qrContent);

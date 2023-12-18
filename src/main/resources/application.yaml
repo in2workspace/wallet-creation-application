@@ -54,7 +54,7 @@ wallet-data:
   url: http://localhost:8086
 
 wallet-wda:
-  url:
+  url: http://localhost:4200
 
 wallet-crypto:
   url: http://localhost:8087
