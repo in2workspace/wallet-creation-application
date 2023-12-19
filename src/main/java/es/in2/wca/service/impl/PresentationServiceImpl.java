@@ -34,12 +34,11 @@ public class PresentationServiceImpl implements PresentationService {
 
     @Override
     public Mono<String> createVerifiablePresentation(String processId, String authorizationToken, List<PresentableCredential> verifiableCredentialsList) {
-        long secondsToAdd = 60000L;
         // Get the subject DID from the first credential in the list
         return getSubjectDidFromTheFirstVcOfTheList(verifiableCredentialsList)
                 .flatMap(did ->
                     // Create the unsigned verifiable presentation
-                    createUnsignedPresentation(verifiableCredentialsList,did,Instant.now().plusSeconds(secondsToAdd))
+                    createUnsignedPresentation(verifiableCredentialsList,did)
                             .flatMap(unsignedVp -> signVerifiablePresentation(did,unsignedVp))
                 )
                 // Log success
@@ -72,22 +71,10 @@ public class PresentationServiceImpl implements PresentationService {
     }
     private Mono<String> createUnsignedPresentation(
             List<PresentableCredential> vcs,
-            String holderDid,
-            Instant expirationDate)
+            String holderDid)
     {
         return Mono.fromCallable(() -> {
             String id = "urn:uuid:" + UUID.randomUUID();
-
-            JWTClaimsSet.Builder jwtClaimsSetBuilder = new JWTClaimsSet.Builder()
-                    .jwtID(id)
-                    .issuer(holderDid)
-                    .subject(holderDid)
-                    .issueTime(Date.from(Instant.now()))
-                    .notBeforeTime(Date.from(Instant.now()));
-
-            if (expirationDate != null) {
-                jwtClaimsSetBuilder.expirationTime(Date.from(expirationDate));
-            }
 
             VerifiablePresentationBuilder vpBuilder = new VerifiablePresentationBuilder()
                     .setId(id)
