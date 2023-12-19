@@ -52,11 +52,7 @@ public class CredentialServiceImpl implements CredentialService {
                         return Mono.error(new FailedDeserializingException("Error while deserializing CredentialResponse: " + response));
                     }
                 })
-                .doOnSuccess(credentialResponse -> log.info("ProcessID: {} - CredentialResponse: {}", processId, credentialResponse))
-                .onErrorResume(e -> {
-                    log.error("Error while fetching Credential from Issuer: {}", e.getMessage());
-                    return Mono.error(new FailedCommunicationException("Error while fetching Credential from Issuer"));
-                });
+                .doOnSuccess(credentialResponse -> log.info("ProcessID: {} - CredentialResponse: {}", processId, credentialResponse));
     }
 
     private Mono<String> postCredential(TokenResponse tokenResponse, CredentialIssuerMetadata credentialIssuerMetadata,
@@ -83,7 +79,10 @@ public class CredentialServiceImpl implements CredentialService {
         List<Map.Entry<String, String>> headers = new ArrayList<>();
         headers.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
         // Send request
-        return postRequest(walletCryptoUrl,headers,"");
+        return postRequest(walletCryptoUrl,headers,"").onErrorResume(e -> {
+            log.error("Error while generating did from crypto: {}", e.getMessage());
+            return Mono.error(new FailedCommunicationException("Error while generating did from crypto"));
+        });
     }
     private Mono<CredentialRequest> buildCredentialRequest(String nonce, String issuer, String did){
         String url = walletCryptoProperties.url() + "/api/v2/sign";
