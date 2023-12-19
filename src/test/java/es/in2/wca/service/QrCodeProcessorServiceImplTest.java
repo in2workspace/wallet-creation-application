@@ -121,7 +121,7 @@ class QrCodeProcessorServiceImplTest {
         String processId = "processId";
         String authorizationToken = "authToken";
         String expectedErrorMessage = "The received QR content cannot be processed";
-        
+
         StepVerifier.create(qrCodeProcessorService.processQrContent(processId, authorizationToken, qrContent))
                 .expectErrorMatches(throwable -> throwable instanceof NoSuchQrContentException &&
                         expectedErrorMessage.equals(throwable.getMessage()))
