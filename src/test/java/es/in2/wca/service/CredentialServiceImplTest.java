@@ -11,6 +11,7 @@ import es.in2.wca.domain.SignRequest;
 import es.in2.wca.domain.TokenResponse;
 import es.in2.wca.exception.FailedCommunicationException;
 import es.in2.wca.exception.FailedDeserializingException;
+import es.in2.wca.exception.ParseErrorException;
 import es.in2.wca.service.impl.CredentialServiceImpl;
 import es.in2.wca.util.Utils;
 import org.junit.jupiter.api.Test;
@@ -92,7 +93,7 @@ class CredentialServiceImplTest {
         }
     }
     @Test
-    void getCredentialCommunicationErrorTest(){
+    void getCredentialFailedCommunicationErrorTest(){
         try (MockedStatic<Utils> ignored = Mockito.mockStatic(Utils.class)){
             String processId = "processId";
 
@@ -115,7 +116,7 @@ class CredentialServiceImplTest {
         }
     }
     @Test
-    void getCredentialErrorTest() throws JsonProcessingException{
+    void getCredentialFailedDeserializingErrorTest() throws JsonProcessingException{
         try (MockedStatic<Utils> ignored = Mockito.mockStatic(Utils.class)){
 
             String processId = "processId";
@@ -164,6 +165,30 @@ class CredentialServiceImplTest {
         }
     }
 
+    @Test
+    void getCredentialParseErrorTest() throws JsonProcessingException {
+        try (MockedStatic<Utils> ignored = Mockito.mockStatic(Utils.class)){
+            String processId = "processId";
+
+            TokenResponse tokenResponse = TokenResponse.builder().accessToken("token").cNonce("nonce").build();
+
+            CredentialIssuerMetadata credentialIssuerMetadata = CredentialIssuerMetadata.builder().credentialIssuer("issuer").credentialEndpoint("endpoint").build();
+
+            String authorizationToken = "authToken";
+
+            List<Map.Entry<String, String>> headersForCryptoDid = new ArrayList<>();
+            headersForCryptoDid.add(new AbstractMap.SimpleEntry<>(HttpHeaders.AUTHORIZATION, BEARER + authorizationToken));
+
+            when(walletCryptoProperties.url()).thenReturn("cryptoUrl");
+
+            when(postRequest("cryptoUrl/api/v2/dids/key", headersForCryptoDid, "")).thenReturn(Mono.just("did:key:123"));
+            when(objectMapper.readTree(anyString())).thenThrow(new JsonProcessingException("Deserialization error") {});
+
+            StepVerifier.create(credentialService.getCredential(processId, tokenResponse, credentialIssuerMetadata, authorizationToken))
+                    .expectError(ParseErrorException.class)
+                    .verify();
+        }
+    }
 
 
 
