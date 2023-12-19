@@ -95,7 +95,7 @@ public class PresentationServiceImpl implements PresentationService {
                     .setVerifiableCredentials(vcs);
 
             VerifiablePresentation vp = vpBuilder.build();
-            try {
+
                 Instant issueTime = Instant.now();
                 Instant expirationTime = issueTime.plus(10, ChronoUnit.DAYS);
                 Map <String, Object> vpParsed = JWTClaimsSet.parse(vp.toJson()).getClaims();
@@ -109,9 +109,6 @@ public class PresentationServiceImpl implements PresentationService {
                         .claim("vp", vpParsed)
                         .build();
                 return payload.toString();
-            } catch (Exception e) {
-                throw new ParseErrorException("Error processing JSON" + e);
-            }
         });
     }
     private Mono<String> signVerifiablePresentation(String did, String unsignedPresentation){
