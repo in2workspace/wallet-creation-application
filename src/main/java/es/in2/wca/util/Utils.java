@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class Utils {
@@ -25,10 +26,17 @@ public class Utils {
     public static final String ISSUER_SUB = "sub";
     public static final String JWT_VC = "jwt_vc";
     public static final String JWT_VP = "jwt_vp";
+    public static final String JWT_VP_CLAIM = "vp";
+    public static final String JWT_PROOF_CLAIM = "proof";
+
     public static final String GET_SELECTABLE_VCS = "/api/v2/credentials/types";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String PRE_AUTH_CODE_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:pre-authorized_code";
     public static final String SERVICE_MATRIX = "service-matrix.properties";
+    public static final Pattern LOGIN_REQUEST_PATTERN = Pattern.compile("(https|http)\\S*(authentication-request|authentication-requests)\\S*");
+    public static final Pattern CREDENTIAL_OFFER_PATTERN = Pattern.compile("(https|http)\\S*(credential-offer)\\S*");
+    public static final Pattern OPENID_CREDENTIAL_OFFER_PATTERN = Pattern.compile("openid-credential-offer://\\S*");
+    public static final Pattern OPENID_AUTHENTICATION_REQUEST_PATTERN = Pattern.compile("openid://\\S*");
 
     public static final String GLOBAL_ENDPOINTS_API = "/api/v2/*";
     public static final String ALLOWED_METHODS = "*";
