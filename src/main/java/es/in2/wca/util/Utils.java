@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class Utils {
 
-    Utils() {
+    private Utils() {
         throw new IllegalStateException("Utility class");
     }
 
