@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Credentials", description = "Credential management API")
 @Slf4j
 @RestController
-@RequestMapping("/api/credentials")
+@RequestMapping("/api/v2/credentials")
 @RequiredArgsConstructor
 public class CredentialController {
 

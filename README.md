@@ -1,4 +1,18 @@
-# WALLET-CREATION-APPLICATION
+<div style="text-align: center;">
+
+<h1>Wallet Creation Application</h1>
+<span>by </span><a href="https://in2.es">in2.es</a>
+<p><p>
+
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=security_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=ncloc)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=alert_status)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=coverage)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
+
+</div>
 
 ## Introduction
 The Wallet-Creation Application is a pivotal component in the issuance and exchange of verifiable credentials with issuers. It plays a key role in credential-based authentication processes for service access on various portals. The application also features QRContent functionality, which determines the appropriate flow based on the contents of a QR code.
@@ -24,21 +38,17 @@ Now that you have the necessary dependencies, you can configure the wallet-creat
 * Wallet-Crypto Configuration
 ```yaml
 wallet-creation-application:
-  container_name: wallet-creation-application
-  image: in2kizuna/wallet-creation-application:v1.0.0
+  image: in2kizuna/wallet-creation-application:v2.0.0
   environment:
-    SERVER_PORT: "8087"
-    OPENAPI_SERVER_URL: "http://wallet-creation-application:8087"
-    WALLET-DATA_URL: "http://wallet-data:8086"
-  command:
-    - run
+    OPENAPI_SERVER_URL: "http://localhost:8087"
+    WALLET_DATA_URL: "http://wallet-data:8080"
+    WALLET_CRYPTO_URL: "http://wallet-crypto:8080"
+    WALLET_WDA_URL: "http://localhost:4200"
   ports:
-    - "8087:8087"
-  networks:
-    local_network:
+    - "8087:8080"
 ```
 ## Project Status
-The project is currently at version **1.0.0** and is in a stable state.
+The project is currently at version **2.0.0** and is in a stable state.
 
 ## Contact
 For any inquiries or collaboration, you can contact us at:
@@ -48,4 +58,4 @@ For any inquiries or collaboration, you can contact us at:
 
 ## Creation Date and Update Dates
 * **Creation Date:** October 26, 2023
-* **Last Updated:** December 4, 2023
+* **Last Updated:** December 20, 2023

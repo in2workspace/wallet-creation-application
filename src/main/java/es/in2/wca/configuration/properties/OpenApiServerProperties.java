@@ -1,16 +1,21 @@
 package es.in2.wca.configuration.properties;
 
-import es.in2.wca.util.Utils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
-@Slf4j
+import java.util.Optional;
+
+/**
+ * OpenApiInfoLicenseProperties
+ *
+ * @param url - server url
+ * @param description
+ */
 public record OpenApiServerProperties(String url, String description) {
 
     @ConstructorBinding
     public OpenApiServerProperties(String url, String description) {
-        this.url = Utils.isNullOrBlank(url) ? "https://localhost:8080" : url;
-        this.description = Utils.isNullOrBlank(description) ? "<server description>" : description;
+        this.url = Optional.ofNullable(url).orElse("http://localhost:8080");
+        this.description = Optional.ofNullable(description).orElse("Wallet User Registry Local Server");
     }
 
 }

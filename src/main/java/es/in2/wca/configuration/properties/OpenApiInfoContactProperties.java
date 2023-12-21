@@ -1,15 +1,23 @@
 package es.in2.wca.configuration.properties;
 
-import es.in2.wca.util.Utils;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
+import java.util.Optional;
+
+/**
+ * OpenApiInfoContactProperties
+ *
+ * @param email - contact email
+ * @param name - contact name
+ * @param url - organization url
+ */
 public record OpenApiInfoContactProperties(String email, String name, String url) {
 
     @ConstructorBinding
     public OpenApiInfoContactProperties(String email, String name, String url) {
-        this.email = Utils.isNullOrBlank(email) ? "<email of your company>" : email;
-        this.name = Utils.isNullOrBlank(name) ? "<name of your company>" : name;
-        this.url = Utils.isNullOrBlank(url) ? "<url of your company>" : url;
+        this.email = Optional.ofNullable(email).orElse("info@example.es");
+        this.name = Optional.ofNullable(name).orElse("John Doe");
+        this.url = Optional.ofNullable(url).orElse("https://example.es");
     }
 
 }
