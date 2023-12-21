@@ -1,4 +1,4 @@
-name: Build and Deploy (Prod Environment)
+name: Deploy
 
 on:
   pull_request:
