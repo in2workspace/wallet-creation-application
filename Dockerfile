@@ -6,7 +6,7 @@ COPY src /home/gradle/src/src
 COPY config /home/gradle/src/config
 COPY docs /home/gradle/src/docs
 COPY gradle /home/gradle/src/gradle
-COPY monitoring /home/gradle/src/monitoring
+COPY config/monitoring /home/gradle/src/monitoring
 COPY waltid/configs /home/gradle/src/waltid/configs
 COPY service-matrix.properties /home/gradle/src/
 WORKDIR /home/gradle/src
