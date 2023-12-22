@@ -7,7 +7,7 @@ COPY config /home/gradle/src/config
 COPY docs /home/gradle/src/docs
 COPY gradle /home/gradle/src/gradle
 COPY config/monitoring /home/gradle/src/monitoring
-COPY waltid/configs /home/gradle/src/waltid/configs
+COPY config/waltid/configs /home/gradle/src/waltid/configs
 COPY service-matrix.properties /home/gradle/src/
 WORKDIR /home/gradle/src
 RUN if [ "$SKIP_TESTS" = "true" ]; then \
