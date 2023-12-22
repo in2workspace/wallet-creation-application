@@ -4,13 +4,20 @@
 <span>by </span><a href="https://in2.es">in2.es</a>
 <p><p>
 
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=security_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=alert_status)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=bugs)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=security_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
+
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=ncloc)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=coverage)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
+
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=ncloc)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=alert_status)](https://sonarcloud.io/dashboard?id=in2workspace_wallet-creation-application)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=coverage)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=in2workspace_wallet-creation-application&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=in2workspace_wallet-creation-application)
 
 </div>
 
