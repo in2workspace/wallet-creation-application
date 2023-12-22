@@ -37,11 +37,11 @@ sonar {
 		property "sonar.projectKey", "in2workspace_wallet-creation-application"
 		property "sonar.organization", "in2workspace"
 		property "sonar.coverage.exclusions",
-						"**/WalletCreationApplication.class, " +
-						"**/configuration/**, " +
-						"**/domain/**, " +
-						"**/exception/**, " +
-						"**/repository/**"
+				"src/main/java/es/in2/wca/WalletCreationApplication.java, " +
+				"src/main/java/es/in2/wca/configuration/**, " +
+				"src/main/java/es/in2/wca/domain/**, " +
+				"src/main/java/es/in2/wca/exception/**, " +
+				"src/main/java/es/in2/wca/repository/**"
 		property "sonar.host.url", "https://sonarcloud.io"
 	}
 }
@@ -118,11 +118,11 @@ tasks.jacocoTestReport {
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
-				'**/WalletCreationApplication.class',
-				'**/configuration/**',
-				'**/domain/**',
-				'**/exception/**',
-				'**/repository/**'
+					"src/main/java/es/in2/wca/WalletCreationApplication.java",
+					"src/main/java/es/in2/wca/configuration/**",
+					"src/main/java/es/in2/wca/domain/**",
+					"src/main/java/es/in2/wca/exception/**",
+					"src/main/java/es/in2/wca/repository/**"
 			])
 		}))
 	}
