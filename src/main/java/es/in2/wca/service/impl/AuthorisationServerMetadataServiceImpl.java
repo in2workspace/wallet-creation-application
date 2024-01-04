@@ -44,6 +44,17 @@ public class AuthorisationServerMetadataServiceImpl implements AuthorisationServ
                 .onErrorResume(e -> Mono.error(new FailedCommunicationException("Error while fetching Authorisation Server Metadata from the Auth Server")));
     }
 
+    /**
+     * This method is marked as deprecated and will be replaced in the future.
+     * The current implementation includes hardcoded token endpoint logic to maintain
+     * backward compatibility with our wallet. A refactoring is planned to improve
+     * this method.
+     *
+     * @param response The response String to be parsed.
+     * @return An instance of Mono<AuthorisationServerMetadata>.
+     * @deprecated (since = "2.0.0", forRemoval = true) This implementation is temporary and should be replaced in future versions.
+     */
+    @Deprecated(since = "2.0.0", forRemoval = true)
     private Mono<AuthorisationServerMetadata> parseCredentialIssuerMetadataResponse(String response) {
         try {
             AuthorisationServerMetadata authorisationServerMetadata = objectMapper.readValue(response, AuthorisationServerMetadata.class);
