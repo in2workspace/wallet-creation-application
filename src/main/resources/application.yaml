@@ -59,6 +59,10 @@ wallet-wda:
 wallet-crypto:
   url: http://localhost:8087
 
+auth-server:
+  domain: https://issuerkeycloak.demo.in2.es/realms/EAAProvider
+  token-endpoint: https://issuerkeycloak.demo.in2.es/realms/EAAProvider/verifiable-credential/did:key:z6MkqmaCT2JqdUtLeKah7tEVfNXtDXtQyj4yxEgV11Y5CqUa/token
+
 openapi:
   server:
     url:

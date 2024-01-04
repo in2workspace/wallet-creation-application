@@ -15,6 +15,7 @@ public class CredentialIssuanceServiceFacadeImpl implements CredentialIssuanceSe
 
     private final CredentialOfferService credentialOfferService;
     private final CredentialIssuerMetadataService credentialIssuerMetadataService;
+    private final AuthorisationServerMetadataService authorisationServerMetadataService;
     private final TokenService tokenService;
     private final CredentialService credentialService;
     private final WalletDataService walletDataService;
@@ -24,13 +25,15 @@ public class CredentialIssuanceServiceFacadeImpl implements CredentialIssuanceSe
         return credentialOfferService.getCredentialOfferFromCredentialOfferUri(processId, qrContent)
                 // get Credential Issuer Metadata
                 .flatMap(credentialOffer -> credentialIssuerMetadataService.getCredentialIssuerMetadataFromCredentialOffer(processId, credentialOffer)
-                        // get Pre-Authorized Token
-                        .flatMap(credentialIssuerMetadata -> tokenService.getPreAuthorizedToken(processId, credentialOffer, credentialIssuerMetadata)
-                                // get Credential
-                                .flatMap(tokenResponse -> credentialService.getCredential(processId, tokenResponse, credentialIssuerMetadata,authorizationToken)))
-                        // save Credential
-                        .flatMap(credentialResponse -> walletDataService.saveCredential(processId, authorizationToken, credentialResponse))
-                );
+                        //get Authorisation Server Metadata
+                        .flatMap(credentialIssuerMetadata -> authorisationServerMetadataService.getAuthorizationServerMetadataFromCredentialIssuerMetadata(processId,credentialIssuerMetadata)
+                                // get Pre-Authorized Token
+                                .flatMap(authorisationServerMetadata -> tokenService.getPreAuthorizedToken(processId, credentialOffer, authorisationServerMetadata)
+                                        // get Credential
+                                        .flatMap(tokenResponse -> credentialService.getCredential(processId, tokenResponse, credentialIssuerMetadata,authorizationToken)))
+                                // save Credential
+                                .flatMap(credentialResponse -> walletDataService.saveCredential(processId, authorizationToken, credentialResponse))
+                        ));
     }
 
 }
