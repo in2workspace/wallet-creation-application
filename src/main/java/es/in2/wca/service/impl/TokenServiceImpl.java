@@ -27,6 +27,7 @@ public class TokenServiceImpl implements TokenService {
 
     private final ObjectMapper objectMapper;
 
+    @Override
     public Mono<TokenResponse> getPreAuthorizedToken(String processId, CredentialOffer credentialOffer,
                                                      AuthorisationServerMetadata authorisationServerMetadata) {
         String tokenURL = authorisationServerMetadata.tokenEndpoint();

@@ -25,8 +25,8 @@ public class AuthorisationServerMetadataServiceImpl implements AuthorisationServ
     private final AuthServerProperties authServerProperties;
 
     @Override
-    public Mono<AuthorisationServerMetadata> getAuthorizationServerMetadataFromCredentialIssuerMetadata(String processId, CredentialIssuerMetadata credentialIssuerMetadataEbsiFormat) {
-        String authorizationServiceURL = credentialIssuerMetadataEbsiFormat.authorizationServer() + "/.well-known/openid-configuration";
+    public Mono<AuthorisationServerMetadata> getAuthorizationServerMetadataFromCredentialIssuerMetadata(String processId, CredentialIssuerMetadata credentialIssuerMetadata) {
+        String authorizationServiceURL = credentialIssuerMetadata.authorizationServer() + "/.well-known/openid-configuration";
         // get Credential Issuer Metadata
         return getAuthorizationServerMetadata(authorizationServiceURL)
                 .doOnSuccess(response -> log.info("ProcessID: {} - Authorisation Server Metadata Response: {}", processId, response))
