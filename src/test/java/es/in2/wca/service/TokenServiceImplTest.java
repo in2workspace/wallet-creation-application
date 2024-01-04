@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import static es.in2.wca.util.Utils.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,17 +36,17 @@ class TokenServiceImplTest {
     @Test
     void getPreAuthorizedTokenTest() throws JsonProcessingException {
         try (MockedStatic<Utils> ignored = Mockito.mockStatic(Utils.class)) {
-        String processId = "123";
-        CredentialOffer.Grant.PreAuthorizedCodeGrant preAuthorizedCodeGrant = CredentialOffer.Grant.PreAuthorizedCodeGrant.builder().preAuthorizedCode("321").build();
-        CredentialOffer.Grant grant = CredentialOffer.Grant.builder().preAuthorizedCodeGrant(preAuthorizedCodeGrant).build();
-        CredentialOffer credentialOffer = CredentialOffer.builder().grant(grant).build();
-        AuthorisationServerMetadata authorisationServerMetadata = AuthorisationServerMetadata.builder().tokenEndpoint("/token").build();
-        TokenResponse expectedTokenResponse = TokenResponse.builder().accessToken("example token").build();
-        List<Map.Entry<String, String>> headers = List.of(Map.entry(CONTENT_TYPE, CONTENT_TYPE_URL_ENCODED_FORM));
-        String body = "pre-authorized_code=321&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Apre-authorized_code";
+            String processId = "123";
+            CredentialOffer.Grant.PreAuthorizedCodeGrant preAuthorizedCodeGrant = CredentialOffer.Grant.PreAuthorizedCodeGrant.builder().preAuthorizedCode("321").build();
+            CredentialOffer.Grant grant = CredentialOffer.Grant.builder().preAuthorizedCodeGrant(preAuthorizedCodeGrant).build();
+            CredentialOffer credentialOffer = CredentialOffer.builder().grant(grant).build();
+            AuthorisationServerMetadata authorisationServerMetadata = AuthorisationServerMetadata.builder().tokenEndpoint("/token").build();
+            TokenResponse expectedTokenResponse = TokenResponse.builder().accessToken("example token").build();
+            List<Map.Entry<String, String>> headers = List.of(Map.entry(CONTENT_TYPE, CONTENT_TYPE_URL_ENCODED_FORM));
 
-        when(postRequest(authorisationServerMetadata.tokenEndpoint(),headers,body)).thenReturn(Mono.just("token response"));
-        when(objectMapper.readValue("token response", TokenResponse.class)).thenReturn(expectedTokenResponse);
+            when(postRequest(eq(authorisationServerMetadata.tokenEndpoint()), eq(headers), anyString()))
+                    .thenReturn(Mono.just("token response"));
+            when(objectMapper.readValue("token response", TokenResponse.class)).thenReturn(expectedTokenResponse);
 
             StepVerifier.create(tokenService.getPreAuthorizedToken(processId,credentialOffer,authorisationServerMetadata))
                 .expectNext(expectedTokenResponse)
@@ -60,9 +62,8 @@ class TokenServiceImplTest {
             CredentialOffer credentialOffer = CredentialOffer.builder().grant(grant).build();
             AuthorisationServerMetadata authorisationServerMetadata = AuthorisationServerMetadata.builder().tokenEndpoint("/token").build();
             List<Map.Entry<String, String>> headers = List.of(Map.entry(CONTENT_TYPE, CONTENT_TYPE_URL_ENCODED_FORM));
-            String body = "pre-authorized_code=321&grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Apre-authorized_code";
 
-            when(postRequest(authorisationServerMetadata.tokenEndpoint(),headers,body)).thenReturn(Mono.error(new RuntimeException()));
+            when(postRequest(eq(authorisationServerMetadata.tokenEndpoint()), eq(headers), anyString())).thenReturn(Mono.error(new RuntimeException()));
 
             StepVerifier.create(tokenService.getPreAuthorizedToken(processId,credentialOffer,authorisationServerMetadata))
                     .expectError(RuntimeException.class)
