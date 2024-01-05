@@ -1,7 +1,7 @@
 package es.in2.wca.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.in2.wca.domain.CredentialIssuerMetadata;
+import es.in2.wca.domain.AuthorisationServerMetadata;
 import es.in2.wca.domain.CredentialOffer;
 import es.in2.wca.domain.TokenResponse;
 import es.in2.wca.exception.FailedCommunicationException;
@@ -27,9 +27,10 @@ public class TokenServiceImpl implements TokenService {
 
     private final ObjectMapper objectMapper;
 
+    @Override
     public Mono<TokenResponse> getPreAuthorizedToken(String processId, CredentialOffer credentialOffer,
-                                                     CredentialIssuerMetadata credentialIssuerMetadata) {
-        String tokenURL = credentialIssuerMetadata.credentialToken();
+                                                     AuthorisationServerMetadata authorisationServerMetadata) {
+        String tokenURL = authorisationServerMetadata.tokenEndpoint();
         // Get Pre-Authorized Token
         return getPreAuthorizedToken(tokenURL, credentialOffer)
                 .doOnSuccess(tokenResponse -> log.info("ProcessID: {} - Pre-Authorized Token Response: {}", processId, tokenResponse))
